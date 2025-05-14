@@ -1,0 +1,24 @@
+{
+  "name": "salesforce-mcp",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^5.0.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.2",
+    "express": "^5.1.0",
+    "jsforce": "^3.8.1"
+  },
+  "files": [
+    "build"
+  ]
+}
