@@ -18,6 +18,34 @@ export const server = new McpServer({
 });
 
 server.tool(
+  "update-records",
+  "Update records",
+  {
+    records: z.array(
+      z
+        .object({
+          Id: z.string().describe("Record ID"),
+        })
+        .passthrough()
+        .describe("Record containing the ID and any other fielts to update."),
+    ),
+    sobject: z.string().describe("SObject Name"),
+  },
+  async ({ records, sobject }) => {
+    const updatedRecords = await conn.sobject(sobject).update(records as any);
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Result of update(s):\n\n${JSON.stringify(updatedRecords, null, "  ")}`,
+        },
+      ],
+    };
+  },
+);
+
+server.tool(
   "retrieve",
   "Retrieve a record by Salesforce ID",
   {
@@ -25,9 +53,11 @@ server.tool(
     sobject: z.string().describe("SObject Name"),
   },
   async ({ id, sobject }) => {
-    const data = await conn.sobject(sobject).retrieve(id);
+    let data;
 
-    if (!data.done) {
+    try {
+      data = await conn.sobject(sobject).retrieve(id);
+    } catch (e) {
       return {
         content: [
           {
@@ -42,10 +72,7 @@ server.tool(
       content: [
         {
           type: "text",
-          text: `One record was retrieved:\n\n${Object.entries(data)
-            .filter(([_, value]) => typeof value !== "object")
-            .map(([key, value]) => key + ": " + value)
-            .join("\n")}`,
+          text: `One record was retrieved:\n\n${JSON.stringify(data, null, "  ")}`,
         },
       ],
     };
@@ -117,13 +144,13 @@ server.tool(
         .join("\n");
     });
 
-    const text = `Records for ${sobject}:\n\n${formattedResults.join("---\n")}`;
+    const text = `Records found for the ${sobject} SObject:\n\n${formattedResults.join("---\n")}`;
 
     return {
       content: [
         {
           type: "text",
-          text,
+          text: JSON.stringify(data, null, "  "),
         },
       ],
     };
