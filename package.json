@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "tsc"
+    "build": "bun build --outdir=build src/stdio.ts src/server.ts src/streamable.ts --target=node",
+    "build:watch": "bun --watch build --outdir=build src/stdio.ts src/server.ts src/streamable.ts --target=node"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -14,9 +15,10 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.11.2",
+    "@modelcontextprotocol/sdk": "^1.13.0",
     "express": "^5.1.0",
-    "jsforce": "^3.8.1"
+    "jsforce": "^3.8.1",
+    "ollama": "^0.5.16"
   },
   "files": [
     "build"
